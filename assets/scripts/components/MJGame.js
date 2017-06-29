@@ -5,7 +5,7 @@ cc.Class({
 
     properties: {        
         gameRoot: {
-            default:null,
+            default: null,
             type:cc.Node
         },
         
@@ -801,6 +801,7 @@ cc.Class({
     showAction:function(data) {
         var options = this._options;
         this._optionsData = data;
+		var net = cc.vv.net;
 
         if (options.active) {
             this.hideOptions();
@@ -831,12 +832,6 @@ cc.Class({
 				this.addOption('chi');
 			}
         }
-
-		if (data.ming) {
-                data.mings = data.mingpai.slice(0);
-
-                this.showTings(true);
-            }
     },
     
     initWanfaLabel:function(){
@@ -1028,28 +1023,7 @@ cc.Class({
         var seatData = seats[cc.vv.gameNetMgr.seatIndex];
         var holds = seatData.holds;
 
-        if (this._mingState == 0) {
-            var canKou = options.canKou;
-            var kou = options.kou;
-            
-            if (canKou && canKou.indexOf(mjid) != -1) {
-                kou.push(mjid);
-            } else if (kou && kou.indexOf(mjid) != -1) {
-                var idx = kou.indexOf(mjid);
-                kou.splice(idx, 1);
-            }
-            
-            options.canKou = mgr.checkKouPai(seatData, kou);
-            options.mings = mgr.getMings(seatData, kou);
-
-            this.checkKouPai(true);
-            console.log(options.kou);
-            console.log(options.mings);
-            this.showTings(true);
-        } else if (this._mingState == 1) {
-            var tings = mgr.getTings(seatData, options.kou, mjid);
-            this.showTingPrompts(tings);
-		} else if (this._gangState == 0) {
+		if (this._gangState == 0) {
             this.enterGangState(1, mjid);
         } else {
         	if (options) {
@@ -1070,17 +1044,13 @@ cc.Class({
 
 		this._lastChupai = mjnode;
 
-        if (this._mingState == 1) {
-            this.enterMingState(2, mjid);
-        } else {
-            if (this.hasOptions()) {
-                net.send("guo");
-            }
-
-            this.showTings(false);
-
-            net.send('chupai', mjid);
+        if (this.hasOptions()) {
+            net.send("guo");
         }
+
+        this.showTings(false);
+
+        net.send('chupai', mjid);
 
 		this._optionsData = null;
     },
@@ -1144,97 +1114,6 @@ cc.Class({
             var gang = (gp.indexOf(mjid) != -1);
 
             mj.setInteractable(gang);
-        }
-    },
-    
-    checkMingPai: function() {
-        var holds = cc.find("game/south/layout/holds", this.node);
-		var mjcnt = holds.childrenCount;
-        var options = this._optionsData;
-        var mings = options.mings;
-        var kou = options.kou;
-        var kouMap = {};
-
-        for (var i = 0; i < kou.length; i++) {
-            kouMap[kou[i]] = 3;
-        }
-        
-        for (var i = 0; i < mjcnt; i++) {
-            var mjnode = holds.children[i];
-			var mj = mjnode.getComponent('SmartMJ');
-
-            if (!mjnode.active) {
-                continue;
-            }
-            
-            var mjid = mj.mjid;
-
-            if (kouMap[mjid] && kouMap[mjid] > 0) {
-                mj.setKou(true);
-                mj.setInteractable(false);
-                mj.setTing(false);
-                kouMap[mjid] --;
-            } else {
-                var ming = (mings.indexOf(mjid) != -1);
-                mj.setInteractable(ming);
-                mj.setTing(ming);
-                mj.setKou(false);
-            }
-        }
-    },
-    
-    checkKouPai: function(check) {
-        var options = this._optionsData;
-        var kou = options.kou;
-        var canKou = options.canKou;
-        var mings = options.mings;
-        var holds = cc.find("game/south/layout/holds", this.node);
-		var mjcnt = holds.childrenCount;
-        var kouMap = {};
-
-        if (check) {
-	        for (var i = 0; i < kou.length; i++) {
-	            kouMap[kou[i]] = 3;
-	        }
-
-	        for (var i = 0; i < mjcnt; i++) {
-	            var mjnode = holds.children[i];
-				var mj = mjnode.getComponent('SmartMJ');
-
-	            if (!mjnode.active) {
-	                continue;
-	            }
-	            
-	            var mjid = mj.mjid;
-	            
-	            var ming = (mings.indexOf(mjid) != -1);
-	            
-	            if (kouMap[mjid] && kouMap[mjid] > 0) {
-	                mj.setKou(true);
-	                mj.setInteractable(true);
-	                mj.setTing(false);
-	                kouMap[mjid] --;
-	            } else if (canKou && canKou.indexOf(mjid) != -1) {
-	                mj.setKou(false);
-	                mj.setInteractable(true);
-	                mj.setTing(ming);
-	            } else {
-	                mj.setKou(false);
-	                mj.setInteractable(false);
-	                mj.setTing(ming);
-	            }
-	        }
-        } else {
-			for (var i = 0; i < mjcnt; i++) {
-	            var mjnode = holds.children[i];
-				var mj = mjnode.getComponent('SmartMJ');
-
-	            if (!mjnode.active) {
-	                continue;
-	            }
-
-				mj.setKou(false);
-			}
         }
     },
 
@@ -1387,96 +1266,6 @@ cc.Class({
             default:
                 break;
         }
-    },
-
-	doMing: function(seatData) {
-		var localIndex = cc.vv.gameNetMgr.getLocalIndex(seatData.seatindex);
-        var side = cc.vv.gameNetMgr.getSide(localIndex);
-		var sideHolds = cc.find('game/' + side + '/layout/holds', this.node);
-
-		for (var i = 0; i < sideHolds.childrenCount; i++) {
-			var child = sideHolds.children[i];
-			var mj = child.getComponent('SmartMJ');
-
-			mj.setFunction(1);
-		}
-    },
-	
-    enterMingState: function(state, pai) {
-        this._mingState = state;
-        
-        var options = this._optionsData;
-        var net = cc.vv.net;
-        var mgr = cc.vv.mahjongmgr;
-
-        var seats = cc.vv.gameNetMgr.seats;
-        var seatData = seats[cc.vv.gameNetMgr.seatIndex];
-        var holds = seatData.holds;
-
-        console.log("mingState " + state);
-
-        switch (state) {
-            case 0: // koupai
-            {
-                var kou = [];
-                options.kou = kou;
-                options.mings = options.mingpai.slice(0);
-                
-                var canKou = mgr.checkKouPai(seatData, kou);
-                
-                options.canKou = canKou;
-
-                if (canKou && canKou.length > 0) {
-                    this.showKouOpt(true);
-                    this.checkKouPai(true);
-                } else {
-                    this.enterMingState(1);
-                }
-
-                break;
-            }
-            case 1: // chupai
-            {
-                this.showKouOpt(false);
-                this.showMingOpt(true);
-                this.checkMingPai();
-                
-                break;
-            }
-            case 2:
-            {
-                this.showMingOpt(false);
-				this.showTingPrompts();
-				this.doMing(seatData);
-                net.send("ming", { pai: pai, kou: options.kou });
-                this.enterMingState(-1);
-                break;
-            }
-            case -1: // leave
-            {
-                this.showMingOpt(false);
-                this.showKouOpt(false);
-                this.showTings(false);
-                //this.checkChuPai(true);
-                this.showTingPrompts();
-                break;
-            }
-            default:
-            {
-                break;
-            }
-        }
-    },
-    
-    onMingCancelClicked: function() {
-    	this.checkKouPai(false);
-        this.enterMingState(-1);
-		this.showTings(true);
-        cc.vv.net.send("guo");
-    },
-    
-    onKouFinishClicked: function() {
-        this.enterMingState(1);
     },
 
 	getMJItem: function(root, localIndex, index) {
@@ -1960,6 +1749,7 @@ cc.Class({
     },
 
 	initOtherMahjongs: function(seatData, reset, hasMopai) {
+		var wc = cc.vv.gameNetMgr.wildcard;
         var localIndex = this.getLocalIndex(seatData.seatindex);
         if (localIndex == 0) {
             return;
@@ -1973,6 +1763,8 @@ cc.Class({
         var sideHolds = cc.find("layout/holds", sideRoot);
         var holds = this.sortHolds(seatData);
 		var swap = 'east' == side;
+
+		console.log('after sort, side=' + side);
 
         if (holds != null && holds.length > 0) {
             var index = 0;
@@ -2018,6 +1810,8 @@ cc.Class({
 				mjnum += 1;
 			}
 
+			console.log('mjnum=' + mjnum);
+
 			for (var i = 0; i < mjnum; i++) {
 				var mjnode = this.getMJItem(sideHolds, localIndex, i);
 				mjnode.active = true;
@@ -2052,7 +1846,7 @@ cc.Class({
 	getPengGangsNum: function(seatData) {
 		var num = seatData.pengs.length + seatData.angangs.length +
 					seatData.diangangs.length + seatData.wangangs.length +
-					seatData.chis;
+					seatData.chis.length;
 
         return num * 3;
 	},
