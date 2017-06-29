@@ -1,0 +1,34 @@
+{
+  "ver": "1.2.4",
+  "uuid": "7957bdd1-81c3-46a0-a27d-608ad1104da9",
+  "rawTextureUuid": "d615409c-3af0-42b0-952e-d176855e28f5",
+  "size": {
+    "width": 379,
+    "height": 221
+  },
+  "type": "Texture Packer",
+  "subMetas": {
+    "WJ-SRF-VIPDT-fenxiangbj.png": {
+      "ver": "1.0.3",
+      "uuid": "66957f6c-7bd7-423a-90de-a2d321b0f70b",
+      "rawTextureUuid": "d615409c-3af0-42b0-952e-d176855e28f5",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0,
+      "trimX": 2,
+      "trimY": 2,
+      "width": 375,
+      "height": 217,
+      "rawWidth": 375,
+      "rawHeight": 217,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "spriteType": "normal",
+      "subMetas": {}
+    }
+  }
+}

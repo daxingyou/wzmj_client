@@ -1,0 +1,30 @@
+{
+  "ver": "1.0.0",
+  "uuid": "f65b419c-941b-4135-943d-3ca7af878383",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "subMetas": {
+    "guanyuwomen": {
+      "ver": "1.0.3",
+      "uuid": "074a9ecc-ca68-4882-86c1-a79b54c28bf1",
+      "rawTextureUuid": "f65b419c-941b-4135-943d-3ca7af878383",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0,
+      "trimX": 4,
+      "trimY": 4,
+      "width": 900,
+      "height": 112,
+      "rawWidth": 908,
+      "rawHeight": 120,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}

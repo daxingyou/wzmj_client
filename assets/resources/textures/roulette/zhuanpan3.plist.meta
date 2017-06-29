@@ -1,0 +1,34 @@
+{
+  "ver": "1.2.4",
+  "uuid": "b6db3eb4-b28d-4c9f-8c86-5274abc1ba8f",
+  "rawTextureUuid": "a0995ed7-0f02-42b4-8861-36bddadfbaf2",
+  "size": {
+    "width": 534,
+    "height": 534
+  },
+  "type": "Texture Packer",
+  "subMetas": {
+    "JC-zhuanpan.png": {
+      "ver": "1.0.3",
+      "uuid": "8563887d-3cf5-46bd-a54e-c8ef7f68dd85",
+      "rawTextureUuid": "a0995ed7-0f02-42b4-8861-36bddadfbaf2",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0,
+      "trimX": 2,
+      "trimY": 2,
+      "width": 530,
+      "height": 530,
+      "rawWidth": 532,
+      "rawHeight": 532,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "spriteType": "normal",
+      "subMetas": {}
+    }
+  }
+}

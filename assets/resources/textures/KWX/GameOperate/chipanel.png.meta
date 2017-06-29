@@ -1,0 +1,30 @@
+{
+  "ver": "1.0.0",
+  "uuid": "d04c1f82-55b6-47ad-95b3-50c41f359c5c",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "subMetas": {
+    "chipanel": {
+      "ver": "1.0.3",
+      "uuid": "9504b29e-e912-4d25-9668-01b8e90db65c",
+      "rawTextureUuid": "d04c1f82-55b6-47ad-95b3-50c41f359c5c",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0,
+      "trimX": 0,
+      "trimY": 0,
+      "width": 339,
+      "height": 107,
+      "rawWidth": 339,
+      "rawHeight": 107,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}

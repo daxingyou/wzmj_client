@@ -1,0 +1,34 @@
+{
+  "ver": "1.2.4",
+  "uuid": "e6feb837-8f42-454b-9508-7b1b1934e564",
+  "rawTextureUuid": "05defa77-31cc-4c9e-a9dd-b97db6841ba4",
+  "size": {
+    "width": 636,
+    "height": 986
+  },
+  "type": "Texture Packer",
+  "subMetas": {
+    "JC-meiridengl.png": {
+      "ver": "1.0.3",
+      "uuid": "a27c9311-7ab3-47e0-999a-1919174c77db",
+      "rawTextureUuid": "05defa77-31cc-4c9e-a9dd-b97db6841ba4",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": true,
+      "offsetX": -3,
+      "offsetY": 7,
+      "trimX": 2,
+      "trimY": 2,
+      "width": 982,
+      "height": 632,
+      "rawWidth": 1136,
+      "rawHeight": 646,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "spriteType": "normal",
+      "subMetas": {}
+    }
+  }
+}

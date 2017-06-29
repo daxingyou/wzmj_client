@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+    <dict>
+        <key>frames</key>
+        <dict>
+            <key>JC-zhuanpan.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{2,2},{530,530}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{1,1},{530,530}}</string>
+                <key>sourceSize</key>
+                <string>{532,532}</string>
+            </dict>
+        </dict>
+        <key>metadata</key>
+        <dict>
+            <key>format</key>
+            <integer>2</integer>
+            <key>realTextureFileName</key>
+            <string>zhuanpan3.png</string>
+            <key>size</key>
+            <string>{534,534}</string>
+            <key>smartupdate</key>
+            <string>$TexturePacker:SmartUpdate:0f7562a207a8ef0a69d5ba398784acfa$</string>
+            <key>textureFileName</key>
+            <string>zhuanpan3.png</string>
+        </dict>
+    </dict>
+</plist>
