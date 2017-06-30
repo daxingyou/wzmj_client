@@ -903,15 +903,81 @@ cc.Class({
         return !found;
     },
 
+	convert: function(holds) {
+		var wc = this.wildcard;
+
+		if (wc < 0) {
+			return;
+		}
+	
+        for (var i = 0; i < holds.length; i++) {
+                var pai = holds[i];
+                if (pai == wc) {
+                        pai = 1;
+                } else if (pai == 47) {
+                        pai = wc;
+                }
+
+				holds[i] = pai;
+        }
+	},
+
+	revert: function(holds) {
+		var wc = this.wildcard;
+
+		if (wc < 0) {
+			return;
+		}
+
+        for (var i = 0; i < holds.length; i++) {
+                var pai = holds[i];
+                if (pai == 1) {
+                        pai = wc;
+                } else if (pai == wc) {
+                        pai = 47;
+                }
+
+				holds[i] = pai;
+        }
+	},
+
 	getChuPaiList: function() {
 		var seat = this.seats[this.seatIndex];
 		var holds = seat.holds;
 		var chupais = [];
+		var wc = this.wildcard;
+
+		var map = { '41': 0, '42': 0, '43': 0, '44': 0, '45': 0, '46': 0 };
+		var _holds = holds.slice(0);
+
+		this.convert(_holds);
+
+		for (var i = 0; i < _holds.length; i++) {
+			var pai = _holds[i];
+
+			if (pai >= 41 && pai <= 46) {
+				map[pai] += 1;
+			}
+		}
+
+		for (var k in map) {
+			var pai = parseInt(k);
+			var num = map[k];
+
+			if (1 == num) {
+				chupais.push(pai);
+			}
+		}
+
+		if (chupais.length > 0) {
+			this.revert(chupais);
+			return chupais;
+		}
 
 		for (var i = 0; i < holds.length; i++) {
 			var pai = holds[i];
 
-			if (chupais.indexOf(pai) == -1 && this.checkCanChuPai(pai)) {
+			if (pai != wc) {
 				chupais.push(pai);
 			}
 		}

@@ -30,10 +30,6 @@ cc.Class({
         
         _playEfxs: [],
 
-        _mingOpt: null,
-        _kouOpt: null,
-
-        _mingState: -1,
         _gangState: -1,
         
         _bgMgr: null,
@@ -136,14 +132,6 @@ cc.Class({
         this.hideOptions();
         this.hideChupai();
         
-        var mingOpt = gameChild.getChildByName("mingOpt");
-        this._mingOpt = mingOpt;
-        this.showMingOpt(false);
-        
-        var kouOpt = gameChild.getChildByName("kouOpt");
-        this._kouOpt = kouOpt;
-        this.showKouOpt(false);
-        
         var gangOpt = gameChild.getChildByName("gangOpt");
         this._gangOpt = gangOpt;
         this.showGangOpt(false);
@@ -206,14 +194,6 @@ cc.Class({
             this._chupais[i].active = false;
         }
     },
-
-    showMingOpt: function(enable) {
-        this._mingOpt.active = enable;
-    },
-    
-    showKouOpt: function(enable) {
-        this._kouOpt.active = enable;
-    },
     
     showGangOpt: function(enable) {
         this._gangOpt.active = enable;
@@ -226,7 +206,6 @@ cc.Class({
         
         this.node.on('game_holds', function(data) {
            self.initMahjongs();
-           //self.checkChuPai(true);
         });
 
 		this.node.on('game_holds_update', function(data) {
@@ -262,7 +241,7 @@ cc.Class({
 
 			var localIndex = cc.vv.gameNetMgr.getLocalIndex(detail.seatIndex);
 			if (0 == localIndex) {
-				//self.checkChuPai(true);
+				self.checkChuPai(true);
 			}
         });
         
@@ -300,10 +279,10 @@ cc.Class({
             }
 
 			if (cc.vv.replayMgr.isReplay()) {
-				var action = data.iszimo ? 'zimo' : 'chi';
+				var action = data.iszimo ? 'zimo' : 'hu';
 
 				self.playEfx(localIndex, action);
-				cc.vv.audioMgr.playHu(action);
+				cc.vv.audioMgr.playDialect('hu_1');
 			}
         });
         
@@ -330,19 +309,16 @@ cc.Class({
 			var pai = data.detail.pai;
 
             if (seatData.seatindex == cc.vv.gameNetMgr.seatIndex) {
-                //self.initMahjongs();
 				self.doChupai(seatData, pai);
-				//self.checkChuPai(false);
+				self.checkChuPai(false);
             }
             else {
 				self.doChupai(seatData, pai);
-                //self.initOtherMahjongs(seatData);
             }
 
-            //self.hideMopai();
             self.showChupai();
-            var content = cc.vv.mahjongmgr.getAudioContentByMJID(data.detail.pai);
-            cc.vv.audioMgr.playCard(content);
+            var content = cc.vv.mahjongmgr.getAudioContentByMJID(pai);
+            cc.vv.audioMgr.playDialect(content);
         });
         
         this.node.on('guo_notify',function(data){
@@ -362,7 +338,7 @@ cc.Class({
 			var pai = data.detail.pai;
             if (seatData.seatindex == cc.vv.gameNetMgr.seatIndex) {
                 self.initMahjongs();
-				//self.checkChuPai(true);
+				self.checkChuPai(true);
 				self.showTings(false);
             }
             else {
@@ -372,7 +348,7 @@ cc.Class({
             var localIndex = self.getLocalIndex(seatData.seatindex);
 
             self.playEfx(localIndex, 'peng');
-			cc.vv.audioMgr.playAction('peng');
+			cc.vv.audioMgr.playDialect('peng');
 
             self.hideOptions();
         });
@@ -384,6 +360,7 @@ cc.Class({
 			var pai = data.detail.pai;
             if (seatData.seatindex == cc.vv.gameNetMgr.seatIndex) {
                 self.initMahjongs();
+				self.checkChuPai(true);
 				self.showTings(false);
             }
             else {
@@ -392,34 +369,10 @@ cc.Class({
 
             var localIndex = self.getLocalIndex(seatData.seatindex);
 
-			// TODO
-            self.playEfx(localIndex, 'peng');
-			cc.vv.audioMgr.playAction('peng');
+            self.playEfx(localIndex, 'chi');
+			cc.vv.audioMgr.playDialect('chi');
 
             self.hideOptions();
-        });
-
-        this.node.on('ming_notify', function(data) {
-            var seatData = data.detail;
-            
-            if(seatData.seatindex == cc.vv.gameNetMgr.seatIndex) {
-                //self.initMahjongs();
-            }
-            else{
-                self.initOtherMahjongs(seatData);
-            }
-
-            var localIndex = self.getLocalIndex(seatData.seatindex);
-            if (seatData.hasmingpai && seatData.tings) {
-                self.showMingpai(localIndex, seatData.tings);
-            }
-            
-            if (0 == localIndex) {
-                //self.checkChuPai(true);
-            }
-
-            self.playEfx(localIndex, 'ming');
-			cc.vv.audioMgr.playAction('ming');
         });
 
         this.node.on('gang_notify',function(info) {
@@ -429,7 +382,7 @@ cc.Class({
             var gangtype = data.gangtype;
             if (seatData.seatindex == cc.vv.gameNetMgr.seatIndex) {
                 self.initMahjongs();
-				//self.checkChuPai(false);
+				self.checkChuPai(false);
 				self.showTings(false);
             } else {
                 self.initOtherMahjongs(seatData);
@@ -437,16 +390,9 @@ cc.Class({
 
             var localIndex = self.getLocalIndex(seatData.seatindex);
 			var scores = data.scores;
-			self.playEfx(localIndex, 'gang', function() {
-				// TODO 
-			});
 
-			var fan = data.fan;
-			if (fan > 0) {
-				cc.vv.audioMgr.playAction('zaigang');
-			} else {
-				cc.vv.audioMgr.playAction('gang');
-			}
+			self.playEfx(localIndex, 'gang');
+			cc.vv.audioMgr.playDialect('gang');
         });
 
         this.node.on("hangang_notify",function(data){
@@ -474,7 +420,7 @@ cc.Class({
 			target.moved = false;
 			self.southMJClicked(event);
 
-			console.log('touch start');
+			//console.log('touch start');
 		};
 
 		var fnTouchEnd = function(event) {
@@ -486,7 +432,7 @@ cc.Class({
 				return;
 			}
 
-			console.log('touch end');
+			//console.log('touch end');
 
 			if (selected && selected == target) {
 				var touches = event.getTouches();
@@ -537,7 +483,7 @@ cc.Class({
 		};
 
 		var fnTouchCancel = function(event) {
-			console.log('touch cancel');
+			//console.log('touch cancel');
 		};
 
 		var holds = this._tempHolds[0];
@@ -563,12 +509,13 @@ cc.Class({
 		var results = data;
 		var done = 0;
 		var self = this;
+		var nSeats = cc.vv.gameNetMgr.numOfSeats;
 
 		var fnCB = function() {
 			console.log('fbCB');
 			done += 1;
 
-			if (done == 3) {
+			if (done == nSeats) {
 				if (cb) {
 					cb();
 				}
@@ -621,62 +568,13 @@ cc.Class({
 
 			var act = hu.action;
 
-			if (hu.numDianPao == 2) {
-				actions.push('yipaoduoxiang');
-			} else if (act == 'gangpao') {
-				actions.push('gangshangpao');
-			} else if (act == 'fangpao') {
+			if (act == 'fangpao') {
 				actions.push('dianpao');
 			} else if (act == 'huangzhuang') {
 				actions.push('huangzhuang');
 			} else if (hu.hued) {
-				var type = hu.typeOf7Pairs;
-				if (type == '3d') {
-					actions.push('chaochaohaohua');
-				} else if (type == '2d') {
-					actions.push('chaohaohua');
-				} else if (type == '1d') {
-					actions.push('haohuaqiduiI');
-				} else if (type != null) {
-					actions.push('qiduihuapai');
-				}
-
-				if (hu.isHaiDiLao) {
-					actions.push('haidelao');
-				}
-
-				if (hu.isHaiDiPao) {
-					actions.push('haidipao');
-				}
-
-				if (hu.isAnSiGui) {
-					actions.push('ansigui');
-				}
-
-				if (hu.isMingSiGui) {
-					actions.push('mingsigui');
-				}
-
-				if (hu.isKaWuXing) {
-					actions.push('kawuxing');
-				}
-
 				if (hu.isDuiDuiHu) {
 					actions.push('pengpeng');
-				}
-
-				if (hu.isJinGouHu == true) {
-					actions.push('shouzhuayi');
-				}
-        
-				if (hu.isDaSanYuan) {
-					actions.push('dasanyuan');
-				} else if (hu.isXiaoSanYuan) {
-					actions.push('xiaosanyuan');
-				}
-        
-				if (hu.qingyise) {
-					actions.push('qingyise');
 				}
 
 				if (act == 'ganghua') {
@@ -686,7 +584,7 @@ cc.Class({
 				} else if (act == 'zimo') {
 					actions.push('zimo');
 				} else if (act == 'hu') {
-					actions.push('chi');
+					actions.push('hu');
 				}
 			}
 
@@ -888,22 +786,23 @@ cc.Class({
 
 	onGameSync: function() {
 		console.log('onGameSync');
+		var net = cc.vv.gameNetMgr;
 
 		this.gameRoot.active = true;
         this.prepareRoot.active = false;
 
-		this._mjcount.string = cc.vv.gameNetMgr.numOfMJ;
-		this._gamecount.string = "" + cc.vv.gameNetMgr.numOfGames + " / " + cc.vv.gameNetMgr.maxNumOfGames;
+		this._mjcount.string = net.numOfMJ;
+		this._gamecount.string = "" + net.numOfGames + " / " + net.maxNumOfGames;
 
 		this.initMahjongs(true);
-        var seats = cc.vv.gameNetMgr.seats;
+        var seats = net.seats;
         for (var i in seats) {
             var seatData = seats[i];
 			var show = seatData.hasmingpai || cc.vv.replayMgr.isReplay();
-            var localIndex = cc.vv.gameNetMgr.getLocalIndex(i);
+            var localIndex = net.getLocalIndex(i);
             if (localIndex != 0) {
                 this.initOtherMahjongs(seatData);
-                if (i == cc.vv.gameNetMgr.turn) {
+                if (i == net.turn) {
 					var mopai = show ? seatData.holds[seatData.holds.length - 1] : -1;
                     this.showMopai(i, mopai);
                 }
@@ -914,17 +813,19 @@ cc.Class({
         }
 
         this.showChupai();
-        if(cc.vv.gameNetMgr.curaction != null){
-            this.showAction(cc.vv.gameNetMgr.curaction);
-            cc.vv.gameNetMgr.curaction = null;
+        if(net.curaction != null){
+            this.showAction(net.curaction);
+            net.curaction = null;
         }
 
-		if (cc.vv.gameNetMgr.seatIndex == cc.vv.gameNetMgr.turn) {
-			//this.checkChuPai(true);
+		if (net.seatIndex == net.turn) {
+			this.checkChuPai(true);
 		}
 	},
 
     onGameBegin:function() {
+    	var net = cc.vv.gameNetMgr;
+
         this._acting = 0;
         this._gameover = null;
 
@@ -938,9 +839,9 @@ cc.Class({
             this._huPrompts[i].active = false;
         }
         
-        for (var i = 0; i < cc.vv.gameNetMgr.seats.length; ++i) {
-            var seatData = cc.vv.gameNetMgr.seats[i];
-            var localIndex = cc.vv.gameNetMgr.getLocalIndex(i);
+        for (var i = 0; i < net.seats.length; ++i) {
+            var seatData = net.seats[i];
+            var localIndex = net.getLocalIndex(i);
             var hupai = this._hupaiTips[localIndex];
             hupai.active = seatData.hued;
             if (seatData.hued) {
@@ -955,7 +856,7 @@ cc.Class({
         this.hideChupai();
         this.hideOptions();
 
-        if (cc.vv.gameNetMgr.gamestate == "" && cc.vv.replayMgr.isReplay() == false) {
+        if (net.gamestate == "" && cc.vv.replayMgr.isReplay() == false) {
             return;
         }
 
@@ -1056,9 +957,9 @@ cc.Class({
     },
 
     checkChuPai: function(check) {
-        var gameNetMgr = cc.vv.gameNetMgr;
-        var seats = gameNetMgr.seats;
-        var seatData = seats[gameNetMgr.seatIndex];
+        var net = cc.vv.gameNetMgr;
+        var seats = net.seats;
+        var seatData = seats[net.seatIndex];
 		var hasmingpai = seatData.hasmingpai;
 
 		var holds = cc.find("game/south/layout/holds", this.node);
@@ -1075,7 +976,7 @@ cc.Class({
 	                }
 	            }
 	        } else {
-	        	var chupais = gameNetMgr.getChuPaiList();
+	        	var chupais = net.getChuPaiList();
 	            for (var i = 0; i < mjcnt; ++i) {
 					var mjnode = holds.children[i];
 	                var mj = mjnode.getComponent('SmartMJ');
@@ -1261,7 +1162,7 @@ cc.Class({
                 break;
             case -1:
                 this.showGangOpt(false);
-                //this.checkChuPai(false);
+                this.checkChuPai(false);
                 break;
             default:
                 break;
@@ -1475,17 +1376,27 @@ cc.Class({
 			holds.push(node);
 		}
 
-		var min = 0;
+		var max = 0;
+		var _holds = [];
+		
 		for (var i = 0; i < holds.length; i++) {
 			var mj = holds[i].getComponent('SmartMJ');
-			if (mopaiId >= mj.mjid) {
-				min = i + 1;
-			} else {
-				break;
+
+			_holds.push(mj.mjid);
+		}
+
+		_holds.push(mopaiId);
+		cc.vv.mahjongmgr.sortMJ(_holds);
+
+		for (var i = 0; i < _holds.length; i++) {
+			var pai = _holds[i];
+
+			if (pai == mopaiId) {
+				max = i;
 			}
 		}
 
-		holds.splice(min, 0, mopaiNode);
+		holds.splice(max, 0, mopaiNode);
 
 		for (var i = 0; i < holds.length; i++) {
 			var node = holds[i];
@@ -1504,7 +1415,6 @@ cc.Class({
 				var p1 = null;
 				var p2 = null;
 
-				// TODO
 				if (0 == localIndex) {
 					var newy = oldy + node.height + 10;
 					p1 = cc.p(oldx, newy);
@@ -1537,17 +1447,19 @@ cc.Class({
     },
 
 	showMopai: function(seatIndex, pai) {
-		var localIndex = cc.vv.gameNetMgr.getLocalIndex(seatIndex);
-		var side = cc.vv.gameNetMgr.getSide(localIndex);
+		var netMgr = cc.vv.gameNetMgr;
+		var localIndex = netMgr.getLocalIndex(seatIndex);
+		var side = netMgr.getSide(localIndex);
 		var sideHolds = cc.find('game/' + side + '/layout/holds', this.node);
 		var mjcnt = sideHolds.childrenCount;
 		var swap = (side == 'east');
 		var myself = (0 == localIndex);
-		var seatData = cc.vv.gameNetMgr.seats[seatIndex];
+		var seatData = netMgr.seats[seatIndex];
 		var showBoard = (pai >= 0) && (seatData.hasmingpai || cc.vv.replayMgr.isReplay());
 		var pgs = this.getPengGangsNum(seatData);
 		var pos = 16 - pgs;
 		var index = swap ? 0 : pos;
+		var wc = netMgr.wildcard;
 
 		console.log('showMopai');
 
@@ -1569,14 +1481,15 @@ cc.Class({
 
 		this.setMJLocation(mjnode, localIndex, pos, showBoard, true);
 
-		console.log('showMopai pos=' + pos);
-
 		mjnode.active = true;
 		mj.setFunction(showBoard ? 1 : 0);
 
 		if (showBoard || myself) {
 			mj.setMJID(pai);
-			mj.setKou(false);
+
+			if (pai == wc) {
+				mj.setWildcard(true);
+			}
 		}
 
 		if (swap) {
@@ -1655,6 +1568,11 @@ cc.Class({
 		setTimeout(function() {
 			cc.vv.audioMgr.playSFX('SoundCommon/SEND_CARD0.mp3');
 			self.initMahjongs(true);
+
+			var net = cc.vv.gameNetMgr;
+			if (net.seatIndex == net.turn) {
+				self.checkChuPai(true);
+			}
 		}, 500);
 	},
 

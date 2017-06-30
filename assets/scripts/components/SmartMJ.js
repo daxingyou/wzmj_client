@@ -66,6 +66,7 @@ cc.Class({
             mj.setMJID(this.mjid);
             mj.setKou(this._kou);
             mj.setTing(this._ting);
+			mj.setWildcard(this._wildcard);
             mj.setInteractable(this._interactable);
             mj.refresh();
         }
@@ -76,6 +77,7 @@ cc.Class({
         this.mjid = -1;
         this._ting = false;
         this._kou = false,
+		this._wildcard = false;
         this._interactable = true;
         
         this.refresh();
@@ -137,3 +139,4 @@ cc.Class({
         this.mjid = mjid;
     }
 });
+

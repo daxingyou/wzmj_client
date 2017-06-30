@@ -92,71 +92,28 @@ cc.Class({
     },
 
 	getAudioContentByMJID: function(id) {
-		var content = '';
-
-		if (id >= 0 && id < 9) {
-			id++;
-			content = 'tong_' + id;
-		} else if (id >= 9 && id < 18) {
-			id = id - 8;
-			content = 'tiao_' + id;
-		} else {
-			switch (id) {
-				case 27:
-					content = 'zhong';
-					break;
-				case 28:
-					content = 'fa';
-					break;
-				case 29:
-					content = 'bai';
-					break;
-				default:
-					break;
-			}
+		if (id >= 11 && id <= 19) {
+			id += 10;
+		} else if (id >= 21 && id <= 29) {
+			id += 10;
+		} else if (id >= 31 && id <= 39) {
+			id -= 20;
 		}
 
-		return content;
+		return '' + id;
     },
-
-	convert: function(holds, wc) {
-        for (var i = 0; i < holds.length; i++) {
-                var pai = holds[i];
-                if (pai == wc) {
-                        pai = 1;
-                } else if (pai == 47) {
-                        pai = wc;
-                }
-
-				holds[i] = pai;
-        }
-	},
-
-	revert: function(holds, wc) {
-        for (var i = 0; i < holds.length; i++) {
-                var pai = holds[i];
-                if (pai == 1) {
-                        pai = wc;
-                } else if (pai == wc) {
-                        pai = 47;
-                }
-
-				holds[i] = pai;
-        }
-	},
-
 
     sortMJ: function(mahjongs) {
         var self = this;
-		var wc = cc.vv.gameNetMgr.wildcard;
+		var net = cc.vv.gameNetMgr;
 
-		this.convert(mahjongs, wc);
+		net.convert(mahjongs);
 		
         mahjongs.sort(function(a, b) {
             return a - b;
         });
 
-		this.revert(mahjongs, wc);
+		net.revert(mahjongs);
     },
 
     getSpriteFrame: function(direction, name) {
