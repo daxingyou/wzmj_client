@@ -945,7 +945,9 @@ cc.Class({
 
 		this._lastChupai = mjnode;
 
+		console.log('shoot');
         if (this.hasOptions()) {
+			console.log('guo');
             net.send("guo");
         }
 
@@ -1706,6 +1708,7 @@ cc.Class({
                 var idx = swap ? (mjcnt - 1 - index) : index;
                 var mjnode = this.getMJItem(sideHolds, localIndex, idx);
                 var mj = mjnode.getComponent("SmartMJ");
+				var mjid = _holds[i];
 
 				this.setMJLocation(mjnode, localIndex, index, true, (index == total - 1) && (total % 3 == 2));
 
@@ -1716,7 +1719,7 @@ cc.Class({
                 }
 
                 mj.setFunction(1);
-                mj.setMJID(_holds[i]);
+                mj.setMJID(mjid);
 				mj.setWildcard(mjid == wc);
                 index++;
             }

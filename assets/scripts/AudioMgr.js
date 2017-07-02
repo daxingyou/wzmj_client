@@ -3,8 +3,8 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
-        bgmVolume:1.0,
-        sfxVolume:1.0,
+        bgmVolume: 1.0,
+        sfxVolume: 1.0,
         
         bgmAudioID:-1,
         
@@ -96,7 +96,7 @@ cc.Class({
 
     playHu: function(name, cb) {
         var speaker = [ 'man', 'woman' ];
-		var path = 'Sound_Hu/{1}/{2}.mp3';
+		var path = 'Sound_Hu/{0}/{1}.mp3';
 
 		path = path.format(speaker[this.speakerID], name);
 		this.playSFX(path, cb);

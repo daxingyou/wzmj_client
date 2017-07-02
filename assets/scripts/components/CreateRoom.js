@@ -114,9 +114,10 @@ cc.Class({
         }
 
         var gamenum = 0;
+		var gamenums = [ 4, 8, 16 ];
         for (var i = 0; i < self._gamenum.length; ++i) {
             if (self._gamenum[i].checked) {
-                gamenum = i;
+                gamenum = gamenums[i];
                 break;
             }
         }
