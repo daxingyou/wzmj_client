@@ -150,6 +150,8 @@ cc.Class({
                 seatView.reason.string = detail.tips ? detail.tips : '';
             }
 
+			console.log('score=' + userData.score);
+
 			var score = userData.score;
 
 			if (score >= 0) {
@@ -212,8 +214,9 @@ cc.Class({
                 seatView._pengandgang[k].active = false;
             }
 
-            seatView.penggangs.width = 0;
+            //seatView.penggangs.width = 0;
 
+/*
             var index = 0;
             var gangs = userData.angangs;
             for (var k = 0; k < gangs.length; k++) {
@@ -253,6 +256,7 @@ cc.Class({
 					index++;
 				}
         	}
+*/
         }
 
 		for (var i = nSeats; i < 4; i++) {
