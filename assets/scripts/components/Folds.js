@@ -3,15 +3,6 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
-        // foo: {
-        //    default: null,
-        //    url: cc.Texture2D,  // optional, default is typeof default
-        //    serializable: true, // optional, default is true
-        //    visible: true,      // optional, default is true
-        //    displayName: 'Foo', // optional
-        //    readonly: false,    // optional, default is false
-        // },
-        // ...
         _folds: null,
 
 		_lastMJ: null,
@@ -97,6 +88,11 @@ cc.Class({
         });
 
 		this.node.on('peng_notify', function(data) {
+			self.initAllFolds();
+			self._lastMJ = null;
+		});
+
+		this.node.on('chi_notify', function(data) {
 			self.initAllFolds();
 			self._lastMJ = null;
 		});

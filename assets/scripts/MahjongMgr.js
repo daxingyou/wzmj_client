@@ -103,19 +103,6 @@ cc.Class({
 		return '' + id;
     },
 
-    sortMJ: function(mahjongs) {
-        var self = this;
-		var net = cc.vv.gameNetMgr;
-
-		net.convert(mahjongs);
-		
-        mahjongs.sort(function(a, b) {
-            return a - b;
-        });
-
-		net.revert(mahjongs);
-    },
-
     getSpriteFrame: function(direction, name) {
     	var sprite = null;
 

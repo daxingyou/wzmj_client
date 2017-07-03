@@ -117,7 +117,11 @@ cc.Class({
 		var roominfo = this._gameover.getChildByName('roominfo').getComponent(cc.Label);
         roominfo.string = this._roominfo;
 
-		var nSeats = cc.vv.gameNetMgr.numOfSeats;
+		var nSeats = data.length;
+
+		console.log(odata);
+		console.log(nSeats);
+		
 
         for (var i = 0; i < nSeats; i++) {
             var seatView = this._seats[i];
@@ -128,9 +132,11 @@ cc.Class({
 			var fangpao = hu.fangpao;
             var mjs = seatView.mjs;
             var hupai = mjs.getChildByName('hupai');
+			var wc = userData.wc;
 
 			seatView.seat.active = true;
 
+			console.log(userData.userId);
 			seatView.icon.setUserID(userData.userId);
 			
 			hupai.active = hued;
@@ -149,8 +155,6 @@ cc.Class({
             if (detail) {
                 seatView.reason.string = detail.tips ? detail.tips : '';
             }
-
-			console.log('score=' + userData.score);
 
 			var score = userData.score;
 
@@ -195,7 +199,7 @@ cc.Class({
                 mjnode.active = false;
             }
 
-            cc.vv.mahjongmgr.sortMJ(userData.holds);
+            cc.vv.gameNetMgr.sortMJ(userData.holds, wc);
 
             var numOfGangs = userData.angangs.length + userData.wangangs.length + userData.diangangs.length;
             var lackingNum = (userData.pengs.length + userData.chis.length + numOfGangs) * 3;
@@ -208,15 +212,15 @@ cc.Class({
 
                 mjnode.active = true;
                 mj.setMJID(pai);
+				mj.setWildcard(pai == wc);
             }
 
             for (var k = 0; k < seatView._pengandgang.length; k++) {
                 seatView._pengandgang[k].active = false;
             }
 
-            //seatView.penggangs.width = 0;
+            seatView.penggangs.width = 0;
 
-/*
             var index = 0;
             var gangs = userData.angangs;
             for (var k = 0; k < gangs.length; k++) {
@@ -224,14 +228,14 @@ cc.Class({
                 this.initPengAndGangs(seatView, index, mjid, 'angang');
                 index++;
             }
-            
+			
             var gangs = userData.diangangs;
             for (var k = 0; k < gangs.length; k++) {
                 var mjid = gangs[k];
                 this.initPengAndGangs(seatView, index, mjid, 'diangang');
                 index++;
             }
-            
+			
             var gangs = userData.wangangs;
             for (var k = 0; k < gangs.length; k++) {
                 var mjid = gangs[k];
@@ -248,15 +252,18 @@ cc.Class({
                 }
             }
 
+			console.log('before chi');
+
 			var chis = userData.chis;
 			if (chis) {
-				for (var i = 0; i < chis.length; i++) {
-					var mjid = chis[i];
+				for (var k = 0; k < chis.length; k++) {
+					var mjid = chis[k];
 					this.initChis(seatView, index, mjid);
 					index++;
 				}
         	}
-*/
+
+			console.log('after chi');
         }
 
 		for (var i = nSeats; i < 4; i++) {
@@ -285,19 +292,18 @@ cc.Class({
 		var mjs = cc.vv.gameNetMgr.getChiArr(mjid);
 		var side = 'south';
 
+		console.log('mjs');
+		console.log(mjs);
+
         for (var i = 0; i < 3; i++) {
             var child = pgroot.children[i];
 
             var board = child.getComponent(cc.Sprite);
-            var tile = child.children[0];
-			var tileSprite = tile.getComponent(cc.Sprite);
+            var tile = child.children[0].getComponent(cc.Sprite);
 
 			board.spriteFrame = mgr.getBoardSpriteFrame(side, "meld");
-			var sprite = mgr.getTileSpriteFrame(side, "meld", mjs[i]);
-
-			tile.active = true;
-			tileSprite.spriteFrame = sprite;
-        }
+			tile.spriteFrame = mgr.getTileSpriteFrame(side, "meld", mjs[i]);
+		}
     },
 
     initPengAndGangs:function(seatView,index,mjid,flag){

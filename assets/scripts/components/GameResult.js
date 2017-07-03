@@ -69,24 +69,35 @@ cc.Class({
             }
         }
 
-        for (var i = 0; i < nSeats; i++) {
-            var seat = seats[i];
+		var layouts = [ [ 1 , 2 ], [ 0, 1, 2 ], [ 0, 1, 2, 3 ] ];
+		var layout = layouts[nSeats - 2];
+
+		var index = 0;
+
+		for (var i = 0; i < 4; i++) {
+			var s = this._seats[i];
+
+			s.node.active = false;
+		}
+
+		for (var i = 0; i < layout.length; i++) {
+			var loc = layout[i];
+            var seat = seats[index];
             var isBigwin = false;
             if (seat.score > 0) {
                 isBigwin = seat.score == maxscore;
             }
 
-            this._seats[i].setInfo(seat.name, seat.score);
-            this._seats[i].setID(seat.userid);
+			var s = this._seats[loc];
 
-            this.showResult(this._seats[i].node, endinfo[i], isBigwin);
+			s.node.active = true;
+            s.setInfo(seat.name, seat.score);
+            s.setID(seat.userid);
+
+            this.showResult(s.node, endinfo[index], isBigwin);
+
+			index++;
         }
-
-		for (var i = nSeats; i < 4; i++) {
-			var node = this._seats[i].node;
-
-			node.active = false;
-		}
 		
 		this._roominfo.string = '房间号: ' + net.roomId + ' 局数: ' + net.numOfGames + '/' + net.maxNumOfGames;
     },

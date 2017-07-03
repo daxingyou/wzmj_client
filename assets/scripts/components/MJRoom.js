@@ -101,18 +101,9 @@ cc.Class({
 
 		this.node.on('gang_notify', function(info) {
 			var data = info.detail;
-			var scores = data.scores;
 
 			if (cc.vv.replayMgr.isReplay()) {
 				return;
-			}
-
-			for (var i = 0; i < scores.length; i++) {
-				var index = cc.vv.gameNetMgr.getLocalIndex(i);
-				var seat = cc.vv.gameNetMgr.seats[i];
-				var _seat = self._seats[index];
-
-				_seat.updateScore(seat.score, scores[i]);
 			}
         });
 

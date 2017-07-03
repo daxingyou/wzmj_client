@@ -6,7 +6,7 @@ cc.Class({
     properties: {        
         gameRoot: {
             default: null,
-            type:cc.Node
+            type: cc.Node
         },
         
         prepareRoot: {
@@ -39,6 +39,8 @@ cc.Class({
 
 		_tempHolds: [],
 		_tempPrompt: null,
+
+		_wildcard: null,
     },
     
     onLoad: function() {
@@ -147,6 +149,23 @@ cc.Class({
 		this._tempPrompt = prompts.children[0];
 		prompts.removeAllChildren();
 		prompts.active = false;
+
+		var wc = gameChild.getChildByName('wildcard');
+
+		wc.active = false;
+		this._wildcard = wc;
+    },
+
+	showWC: function(pai) {
+		var wc = this._wildcard;
+		var mj = wc.children[0].getComponent('Majiang');
+
+		wc.active = true;
+		mj.setMJID(pai);
+    },
+
+	hideWC: function() {
+		this._wildcard.active = false;
     },
 
 	showTingPrompts: function(tings) {
@@ -288,6 +307,12 @@ cc.Class({
         
         this.node.on('mj_count',function(data) {
             self._mjcount.string = cc.vv.gameNetMgr.numOfMJ;
+        });
+
+		this.node.on('game_wildcard', function(data) {
+			var wc = data.detail;
+			console.log('wildcard: ' + wc);
+            self.showWC(wc);
         });
         
         this.node.on('game_num',function(data){
@@ -821,6 +846,9 @@ cc.Class({
 		if (net.seatIndex == net.turn) {
 			this.checkChuPai(true);
 		}
+
+		console.log('wild card: ' + net.wildcard);
+		this.showWC(net.wildcard);
 	},
 
     onGameBegin:function() {
@@ -862,6 +890,8 @@ cc.Class({
 
 		this.gameRoot.active = true;
         this.prepareRoot.active = false;
+
+		this.hideWC();
     },
 
 	onMJClicked: function(event) {
@@ -1297,7 +1327,7 @@ cc.Class({
             mopai = holds.pop();
         }
 
-        cc.vv.mahjongmgr.sortMJ(holds);
+        cc.vv.gameNetMgr.sortMJ(holds);
 
         if (mopai != null) {
             holds.push(mopai);
@@ -1388,7 +1418,7 @@ cc.Class({
 		}
 
 		_holds.push(mopaiId);
-		cc.vv.mahjongmgr.sortMJ(_holds);
+		cc.vv.gameNetMgr.sortMJ(_holds);
 
 		for (var i = 0; i < _holds.length; i++) {
 			var pai = _holds[i];
