@@ -118,10 +118,7 @@ cc.Class({
         roominfo.string = this._roominfo;
 
 		var nSeats = data.length;
-
-		console.log(odata);
-		console.log(nSeats);
-		
+		var huSeats = [];
 
         for (var i = 0; i < nSeats; i++) {
             var seatView = this._seats[i];
@@ -147,6 +144,8 @@ cc.Class({
 
 				nc.active = true;
 				mj.setMJID(hu.pai);
+
+				huSeats.push(i);
 			}
 
             seatView.username.string = cc.vv.gameNetMgr.seats[i].name;
@@ -158,6 +157,7 @@ cc.Class({
 
 			var score = userData.score;
 
+			console.log('score=' + score);
 			if (score >= 0) {
 				seatView.winScore.string = '+' + score;
 				seatView.winScore.node.active = true;
@@ -166,19 +166,6 @@ cc.Class({
 				seatView.loseScore.string = score;
 				seatView.loseScore.node.active = true;
 				seatView.winScore.node.active = false;
-			}
-
-			if (userData.userId == cc.vv.userMgr.userId) {
-				var id = 0;
-				if (score > 0) {
-					id = 0;
-				} else if (score < 0) {
-					id = 1;
-				} else {
-					id = 2;
-				}
-
-				this._title.setIndex(id);
 			}
 
             var action = seatView.action;
@@ -252,8 +239,6 @@ cc.Class({
                 }
             }
 
-			console.log('before chi');
-
 			var chis = userData.chis;
 			if (chis) {
 				for (var k = 0; k < chis.length; k++) {
@@ -262,8 +247,6 @@ cc.Class({
 					index++;
 				}
         	}
-
-			console.log('after chi');
         }
 
 		for (var i = nSeats; i < 4; i++) {
@@ -271,6 +254,19 @@ cc.Class({
 
 			seat.active = false;
 		}
+
+		var si = cc.vv.gameNetMgr.seatIndex;
+		var id = 0;
+
+		if (huSeats.length == 0) {
+			id = 2;
+		} else if (huSeats.indexOf(si) >= 0) {
+			id = 0;
+		} else {
+			id = 1;
+		}
+
+		this._title.setIndex(id);
     },
 
 	initChis: function(seatView, index, mjid) {
@@ -339,7 +335,7 @@ cc.Class({
 				tile.spriteFrame = mgr.getTileSpriteFrame(side, "meld", mjid);
             } else {
 	            if (flag == "angang") {
-                    board.spriteFrame = mgr.getAnySpriteFrame(side, "meld_cover");
+                    board.spriteFrame = mgr.getBoardSpriteFrame(side, "meld_cover");
                     tile.spriteFrame = null;
                 } else {
 					board.spriteFrame = mgr.getBoardSpriteFrame(side, "meld");

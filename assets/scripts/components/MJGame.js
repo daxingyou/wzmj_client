@@ -1079,7 +1079,9 @@ cc.Class({
 
 		chiOpt.active = true;
 
-		console.log('showChiOptions');
+		types.sort(function(a, b) {
+            return b - a;
+        });
 
 		for (var i = 0; i < types.length && i < chis.childrenCount; i++) {
 			var chi = chis.children[i];
