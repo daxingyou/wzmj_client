@@ -80,12 +80,13 @@ cc.Class({
     },
 
     initView: function() {
+    	var net = cc.vv.gameNetMgr;
         var gameChild = this.node.getChildByName("game");
 
         this._mjcount = cc.find("mj_count/mj_count", gameChild).getComponent(cc.Label);
-        this._mjcount.string = cc.vv.gameNetMgr.numOfMJ;
+        this._mjcount.string = net.numOfMJ;
         this._gamecount = cc.find("Canvas/infobar/room/game_count").getComponent(cc.Label);
-        this._gamecount.string = "" + cc.vv.gameNetMgr.numOfGames + " / " + cc.vv.gameNetMgr.maxNumOfGames;
+        this._gamecount.string = "" + net.numOfGames + " / " + net.maxNumOfGames;
 
         var south = gameChild.getChildByName("south");
         var layout = south.getChildByName("layout");
@@ -96,7 +97,7 @@ cc.Class({
         layout.scaleX *= realwidth/1280;
         layout.scaleY *= realwidth/1280;
 
-		var valid = cc.vv.gameNetMgr.getValidLocalIDs();
+		var valid = net.getValidLocalIDs();
         var sides = [ 'south', 'east', 'north', 'west' ];
         for (var i = 0; i < sides.length; ++i) {
             var side = sides[i];
@@ -115,7 +116,13 @@ cc.Class({
             this._chupais.push(sideChild.getChildByName("chupai"));
 
 			var holds = [];
+			var _layout = sideChild.getChildByName('layout');
 			var _holds = cc.find("layout/holds", sideChild);
+
+			if (net.numOfHolds == 13) {
+				_layout.scaleX *= 1.25;
+				_layout.scaleY *= 1.25;
+			}
 
 			while (_holds.childrenCount > 0) {
 				var mj = _holds.children[0];
@@ -160,8 +167,10 @@ cc.Class({
 		var wc = this._wildcard;
 		var mj = wc.children[0].getComponent('Majiang');
 
-		wc.active = true;
-		mj.setMJID(pai);
+		if (pai != null && pai > 0) {
+			wc.active = true;
+			mj.setMJID(pai);
+		}
     },
 
 	hideWC: function() {
@@ -848,10 +857,12 @@ cc.Class({
 		}
 
 		console.log('wild card: ' + net.wildcard);
-		this.showWC(net.wildcard);
+		if (net.wildcard != null) {
+			this.showWC(net.wildcard);
+		}
 	},
 
-    onGameBegin:function() {
+    onGameBegin: function() {
     	var net = cc.vv.gameNetMgr;
 
         this._acting = 0;
@@ -996,6 +1007,10 @@ cc.Class({
 
 		var holds = cc.find("game/south/layout/holds", this.node);
 		var mjcnt = holds.childrenCount;
+
+		if (net.getGameType() == 'zzmj') {
+			return;
+		}
 
 		if (check) {
 	        if (hasmingpai) {
@@ -1491,7 +1506,7 @@ cc.Class({
 		var seatData = netMgr.seats[seatIndex];
 		var showBoard = (pai >= 0) && (seatData.hasmingpai || cc.vv.replayMgr.isReplay());
 		var pgs = this.getPengGangsNum(seatData);
-		var pos = 16 - pgs;
+		var pos = netMgr.numOfHolds - pgs;
 		var index = swap ? 0 : pos;
 		var wc = netMgr.wildcard;
 
@@ -1541,7 +1556,8 @@ cc.Class({
 	},
 
 	updateHolds: function() {
-		var seats = cc.vv.gameNetMgr.seats;
+		var net = cc.vv.gameNetMgr;
+		var seats = net.seats;
         var seatData = seats[cc.vv.gameNetMgr.seatIndex];
         var holds = seatData.holds;
         if (holds == null) {
@@ -1569,7 +1585,7 @@ cc.Class({
 			var mjnode = this.getMJItem(sideHolds, 0, i);
 			var mj = mjnode.getComponent('SmartMJ');
 
-			this.setMJLocation(mjnode, 0, i, show, (i == 16));
+			this.setMJLocation(mjnode, 0, i, show, (i == net.numOfHolds));
 
 			mj.reset();
 
@@ -1616,7 +1632,8 @@ cc.Class({
             return;
         }
 
-        var side = cc.vv.gameNetMgr.getSide(localIndex);
+		var net = cc.vv.gameNetMgr;
+        var side = net.getSide(localIndex);
         var game = this.node.getChildByName("game");
         var sideRoot = game.getChildByName(side);
         var sideHolds = cc.find("layout/holds", sideRoot);
@@ -1642,7 +1659,7 @@ cc.Class({
 			var mjnode = this.getMJItem(sideHolds, localIndex, idx);
 			var mj = mjnode.getComponent("SmartMJ");
 
-			this.setMJLocation(mjnode, localIndex, i, false, (i == 16));
+			this.setMJLocation(mjnode, localIndex, i, false, (i == net.numOfHolds));
 
 			mjnode.active = true;
 
@@ -1701,7 +1718,8 @@ cc.Class({
     },
 
 	initOtherMahjongs: function(seatData, reset, hasMopai) {
-		var wc = cc.vv.gameNetMgr.wildcard;
+		var net = cc.vv.gameNetMgr;
+		var wc = net.wildcard;
         var localIndex = this.getLocalIndex(seatData.seatindex);
         if (localIndex == 0) {
             return;
@@ -1757,7 +1775,7 @@ cc.Class({
             }
         } else {
 			var penggangs = this.getPengGangsNum(seatData);
-			var mjnum = 16 - penggangs;
+			var mjnum = net.numOfHolds - penggangs;
 
 			if (hasMopai) {
 				mjnum += 1;
@@ -1799,7 +1817,7 @@ cc.Class({
 	getPengGangsNum: function(seatData) {
 		var num = seatData.pengs.length + seatData.angangs.length +
 					seatData.diangangs.length + seatData.wangangs.length +
-					seatData.chis.length;
+					(seatData.chis ? seatData.chis.length : 0);
 
         return num * 3;
 	},

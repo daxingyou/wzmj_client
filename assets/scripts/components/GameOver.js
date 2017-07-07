@@ -189,7 +189,7 @@ cc.Class({
             cc.vv.gameNetMgr.sortMJ(userData.holds, wc);
 
             var numOfGangs = userData.angangs.length + userData.wangangs.length + userData.diangangs.length;
-            var lackingNum = (userData.pengs.length + userData.chis.length + numOfGangs) * 3;
+            var lackingNum = (userData.pengs.length + (userData.chis ? userData.chis.length : 0) + numOfGangs) * 3;
             var total = userData.holds.length;
 
             for (var k = 0; k < total; k++) {
@@ -287,9 +287,6 @@ cc.Class({
 
 		var mjs = cc.vv.gameNetMgr.getChiArr(mjid);
 		var side = 'south';
-
-		console.log('mjs');
-		console.log(mjs);
 
         for (var i = 0; i < 3; i++) {
             var child = pgroot.children[i];

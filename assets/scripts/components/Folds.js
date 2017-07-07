@@ -8,7 +8,6 @@ cc.Class({
 		_lastMJ: null,
     },
 
-    // use this for initialization
     onLoad: function () {
         if(cc.vv == null){
             return;
@@ -24,11 +23,23 @@ cc.Class({
         this._folds = {};
         var game = this.node.getChildByName("game");
         var sides = [ 'south', 'east','north', 'west'];
+		var net = cc.vv.gameNetMgr;
+		var nSeats = net.numOfSeats;
+		var bigfolds = net.needBigFolds();
+
+		if (bigfolds) {
+			cc.find('south/folds', game).active = false;
+			cc.find('south/bfolds', game).active = true;
+			cc.find('north/folds', game).active = false;
+			cc.find('north/bfolds', game).active = true;
+		}
+
         for (var i = 0; i < sides.length; ++i) {
             var sideName = sides[i];
             var sideRoot = game.getChildByName(sideName);
             var folds = [];
-            var foldRoot = sideRoot.getChildByName("folds");
+			var name = (bigfolds && (sideName == 'south' || sideName == 'north')) ? 'bfolds' : 'folds';
+            var foldRoot = sideRoot.getChildByName(name);
             for (var j = 0; j < foldRoot.children.length; ++j) {
                 var n = foldRoot.children[j];
                 var mj = n.getComponent("Majiang");
@@ -121,18 +132,21 @@ cc.Class({
     },
     
     getRealIndex: function(localIndex, idx) {
+    	var net = cc.vv.gameNetMgr;
+		var bigfolds = net.needBigFolds();
+		var row = 3;
+		var column = bigfolds ? 20 : 12;
+
 		if (2 == localIndex || 3 == localIndex) {
 			return idx;
 		} else if (0 == localIndex || 1 == localIndex) {
-			var newid = 0;
-			if (idx < 12) {
-	            newid = idx + 12;
-			} else {
-	            newid = idx - 12;
-	        }
+			var rid = row - 1 - parseInt(idx / column);
+			var cid = idx % column;
+
+			var newid = rid * column + cid;
 
 			if (1 == localIndex) {
-				newid = 23 - newid;
+				newid = row * column - 1 - newid;
 			}
 
 			return newid;

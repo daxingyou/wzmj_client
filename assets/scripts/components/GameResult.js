@@ -24,7 +24,7 @@ cc.Class({
 
         var seats = this._gameresult.getChildByName('seats');
         for (var i = 0; i < seats.children.length; i++) {
-            this._seats.push(seats.children[i].getComponent('Seat'));   
+            this._seats.push(seats.children[i].getComponent('Seat'));
         }
 
         var btnClose = gameresult.getChildByName('btnClose');
@@ -44,16 +44,41 @@ cc.Class({
     },
 
     showResult: function(seat, info, winner) {
+		var type = cc.vv.gameNetMgr.getGameType();
     	var values = seat.getChildByName('values');
 
-        values.getChildByName('button').getComponent(cc.Label).string = info.numzz;
-        values.getChildByName('gang').getComponent(cc.Label).string = info.numgang;
-        values.getChildByName('maidi').getComponent(cc.Label).string = info.nummd;
-        values.getChildByName("dingdi").getComponent(cc.Label).string = info.numdd;
-		values.getChildByName("yingpai").getComponent(cc.Label).string = info.numyp;
-        values.getChildByName("sf").getComponent(cc.Label).string = info.numsf;
+		var wzmj = [ info.numzz, info.numgang, info.nummd, info.numdd, info.numyp, info.numsf ];
+		var vals = [ info.numzimo, info.numjiepao, info.numdianpao, info.numangang, info.numminggang ];
+
+		if ('wzmj' == type) {
+			vals = wzmj;
+		}
+
+		for (var i = 0; i < vals.length; i++) {
+			var child = values.children[i];
+
+			child.getComponent(cc.Label).string = vals[i];
+		}
 
         seat.getChildByName('winner').active = winner;
+    },
+
+	showStat: function(seat) {
+		var type = cc.vv.gameNetMgr.getGameType();
+		var wzmj = [ '坐庄次数', '扛牌次数', '买底次数', '顶底次数', '硬牌次数', '双翻次数' ];
+		var stats = [ '自摸次数', '接炮次数', '点炮次数', '暗杠次数', '明杠次数' ];
+
+		if ('wzmj' == type) {
+			stats = wzmj;
+		}
+
+		var stat = seat.getChildByName('stats');
+
+		for (var i = 0; i < stats.length; i++) {
+			var child = stat.children[i];
+
+			child.getComponent(cc.Label).string = stats[i];
+		}
     },
 
     onGameEnd: function(endinfo) {
@@ -89,12 +114,17 @@ cc.Class({
             }
 
 			var s = this._seats[loc];
+			var node = s.node;
+			var owner = node.getChildByName('owner');
 
-			s.node.active = true;
+			node.active = true;
+			owner.active = (index == 0);
+
             s.setInfo(seat.name, seat.score);
             s.setID(seat.userid);
 
-            this.showResult(s.node, endinfo[index], isBigwin);
+			this.showStat(node);
+            this.showResult(node, endinfo[index], isBigwin);
 
 			index++;
         }

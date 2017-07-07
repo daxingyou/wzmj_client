@@ -8,6 +8,7 @@ cc.Class({
         maxNumOfGames:0,
         numOfGames:0,
         numOfMJ:0,
+        numOfHolds: 13,
         seatIndex:-1,
         seats: null,
         numOfSeats: 0,
@@ -154,6 +155,8 @@ cc.Class({
 		var conf = baseInfo.conf;
         this.conf = conf;
 
+		this.checkType();
+
 		this.numOfGames = baseInfo.index + 1;
 		this.maxNumOfGames = conf.maxGames;
     },
@@ -173,7 +176,29 @@ cc.Class({
 
         return '';
 	},
-    
+
+	checkType: function() {
+		var conf = this.conf;
+
+		if (conf.type == 'wzmj') {
+			this.numOfHolds = 16;
+		}
+	},
+
+	getGameType: function() {
+		var conf = this.conf;
+
+		if (conf && conf.type) {
+			return conf.type;
+		}
+
+		return '';
+	},
+
+	needBigFolds: function() {
+		return (2 == this.numOfSeats && 'wzmj' == this.getGameType());
+	},
+
     initHandlers: function() {
         var self = this;
         cc.vv.net.addHandler("login_result",function(data) {
@@ -187,6 +212,8 @@ cc.Class({
                 self.numOfSeats = data.numofseats;
                 self.seatIndex = self.getSeatIndexByID(cc.vv.userMgr.userId);
                 self.isOver = false;
+
+				self.checkType();
             }
             else{
                 console.log(data.errmsg);   

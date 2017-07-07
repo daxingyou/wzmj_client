@@ -26,9 +26,11 @@ cc.Class({
     },
     
     initView:function() {
+    	var net = cc.vv.gameNetMgr;
         var prepare = this.node.getChildByName("prepare");
         var seats = this.node.getChildByName("seats");
-		var valids = cc.vv.gameNetMgr.getValidLocalIDs();
+		var valids = net.getValidLocalIDs();
+		var nSeats = net.numOfSeats;
 
         for (var i = 0; i < seats.children.length; ++i) {
 			var child = seats.children[i];
