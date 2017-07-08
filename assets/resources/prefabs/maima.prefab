@@ -59,7 +59,7 @@
     "_tag": -1,
     "_opacityModifyRGB": false,
     "_id": "",
-    "_active": false,
+    "_active": true,
     "_components": [
       {
         "__id__": 22
@@ -380,8 +380,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 110,
-      "height": 44
+      "width": 80,
+      "height": 40
     },
     "_children": [],
     "_rotationX": 0,
@@ -412,30 +412,27 @@
     "groupIndex": 0
   },
   {
-    "__type__": "cc.Sprite",
+    "__type__": "cc.Label",
     "_name": "",
     "_objFlags": 0,
     "node": {
       "__id__": 10
     },
     "_enabled": true,
-    "_spriteFrame": {
-      "__uuid__": "d41ba595-2593-4a20-b74c-88f238a43850"
+    "_useOriginalSize": false,
+    "_actualFontSize": 40,
+    "_fontSize": 40,
+    "_lineHeight": 40,
+    "_enableWrapText": true,
+    "_N$file": {
+      "__uuid__": "3fbd2ff4-d5eb-4260-b70c-1165457e8301"
     },
-    "_type": 0,
-    "_sizeMode": 1,
-    "_fillType": 0,
-    "_fillCenter": {
-      "__type__": "cc.Vec2",
-      "x": 0,
-      "y": 0
-    },
-    "_fillStart": 0,
-    "_fillRange": 0,
-    "_isTrimmedMode": true,
-    "_srcBlendFactor": 770,
-    "_dstBlendFactor": 771,
-    "_atlas": null
+    "_isSystemFontUsed": false,
+    "_spacingX": 0,
+    "_N$string": "抓鸟",
+    "_N$horizontalAlign": 0,
+    "_N$verticalAlign": 0,
+    "_N$overflow": 0
   },
   {
     "__type__": "cc.PrefabInfo",
@@ -741,8 +738,8 @@
     "_spriteFrame": {
       "__uuid__": "6f21d180-2546-4ad9-8254-dae50b65fe39"
     },
-    "_type": 0,
-    "_sizeMode": 1,
+    "_type": 1,
+    "_sizeMode": 0,
     "_fillType": 0,
     "_fillCenter": {
       "__type__": "cc.Vec2",

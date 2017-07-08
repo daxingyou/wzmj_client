@@ -163,6 +163,9 @@ cc.Class({
 
 		wc.active = false;
 		this._wildcard = wc;
+
+		this._maima = cc.find('Canvas/maima');
+        this.hideMaiMa();
     },
 
 	showWC: function(pai) {
@@ -541,19 +544,103 @@ cc.Class({
 		gameover.onGameOver(data);
     },
 
+	hideMaiMa: function() {
+        this._maima.active = false;
+    },
+
+	showMaiMa: function(birds, cb) {
+        var maima = this._maima;
+        var layout = maima.getChildByName('layout');
+        var num = layout.getChildByName('num').getComponent(cc.Label);
+		var _birds = maima.getChildByName('birds');
+		var mjs = birds.mjs;
+		var total = _birds.childrenCount;
+
+        maima.active = true;
+        layout.active = false;
+
+		if (0 == mjs.length) {
+			if (cb) {
+				cb();
+			}
+		}
+
+        var self = this;
+		var mgr = cc.vv.mahjongmgr;
+		var anim0 = null;
+
+        var fn = function() {
+            layout.active = true;
+            num.string = birds.score;
+
+			for (var i = 0; i < mjs.length; i++) {
+				var mj = mjs[i];
+				var board = _birds.children[i];
+				var tile = board.children[0].getComponent(cc.Sprite);
+				var tileSpriteFrame = mgr.getTileSpriteFrame('south', 'hand', mj);
+
+				tile.spriteFrame = tileSpriteFrame;
+			}
+
+            setTimeout(function() {
+                maima.active = false;
+                if (cb) {
+                    cb();
+                }
+            }, 2000);
+            
+            anim0.off('finished', fn);
+        };
+
+        console.log('showMaiMa');
+
+		var index = 0;
+		for (var i = 0; i < mjs.length; i++, index++) {
+			var mj = mjs[i];
+			var board = _birds.children[i];
+			var tile = board.children[0].getComponent(cc.Sprite);
+			var anim = board.getComponent(cc.Animation);
+
+			board.active = true;
+			tile.spriteFrame = null;
+
+			if (0 == i) {
+				anim0 = anim;
+				anim.on('finished', fn);
+			}
+
+			anim.play('maima1');
+		}
+
+		for (var i = index; i < total; i++) {
+			var board = _birds.children[i];
+
+			board.active = false;
+		}
+    },
+
     playHuAction: function(data, cb) {
 		var results = data;
 		var done = 0;
 		var self = this;
 		var nSeats = cc.vv.gameNetMgr.numOfSeats;
+		var birds = null;
 
 		var fnCB = function() {
 			console.log('fbCB');
 			done += 1;
 
 			if (done == nSeats) {
-				if (cb) {
-					cb();
+				if (birds) {
+					self.showMaiMa(birds, function() {
+						if (cb) {
+							cb();
+						}
+					});
+				} else {
+					if (cb) {
+						cb();
+					}
 				}
 			}
 		};
@@ -594,6 +681,10 @@ cc.Class({
 			var result = results[i];
 			var hu = result.hu;
 			var actions = [];
+
+			if (result.birds) {
+				birds = result.birds;
+			}
 
 			if (!hu) {
 				fnCB();

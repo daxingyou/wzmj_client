@@ -308,12 +308,8 @@ cc.Class({
 
 		pgroot.children[3].active = false;
 
-		console.log('initChis: ' + mjid);
-
 		var mjs = this.getChiArr(mjid, wc);
 		var side = 'south';
-
-		console.log(mjs);
 
         for (var i = 0; i < 3; i++) {
             var child = pgroot.children[i];
