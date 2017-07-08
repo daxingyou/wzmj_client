@@ -179,10 +179,13 @@ cc.Class({
 
 	checkType: function() {
 		var conf = this.conf;
+		var num = 13;
 
 		if (conf.type == 'wzmj') {
-			this.numOfHolds = 16;
+			num = 16;
 		}
+
+		this.numOfHolds = num;
 	},
 
 	getGameType: function() {
@@ -684,8 +687,13 @@ cc.Class({
 	getChiArr: function(pai, ign) {
 		var type = parseInt(pai / 100);
 		var c = pai % 100;
-		var begin = c - type;
 		var wc = this.wildcard;
+
+		if (c == 47) {
+			c = wc;
+		}
+		
+		var begin = c - type;
 
 		var arr = [];
 		for (var i = 0; i < 3; i++) {

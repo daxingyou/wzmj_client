@@ -119,6 +119,7 @@ cc.Class({
 
 		var nSeats = data.length;
 		var huSeats = [];
+		var wc = -1;
 
         for (var i = 0; i < nSeats; i++) {
             var seatView = this._seats[i];
@@ -129,8 +130,8 @@ cc.Class({
 			var fangpao = hu.fangpao;
             var mjs = seatView.mjs;
             var hupai = mjs.getChildByName('hupai');
-			var wc = userData.wc;
 
+			wc = userData.wc;
 			seatView.seat.active = true;
 
 			console.log(userData.userId);
@@ -192,7 +193,7 @@ cc.Class({
             var lackingNum = (userData.pengs.length + (userData.chis ? userData.chis.length : 0) + numOfGangs) * 3;
             var total = userData.holds.length;
 
-            for (var k = 0; k < total; k++) {
+            for (var k = 0; k < total && k + lackingNum < holds.childrenCount; k++) {
                 var pai = userData.holds[k];
                 var mjnode = holds.children[k + lackingNum];
 				var mj = mjnode.getComponent("Majiang");
@@ -243,7 +244,7 @@ cc.Class({
 			if (chis) {
 				for (var k = 0; k < chis.length; k++) {
 					var mjid = chis[k];
-					this.initChis(seatView, index, mjid);
+					this.initChis(seatView, index, mjid, wc);
 					index++;
 				}
         	}
@@ -269,10 +270,32 @@ cc.Class({
 		this._title.setIndex(id);
     },
 
-	initChis: function(seatView, index, mjid) {
+	getChiArr: function(pai, wc) {
+		var type = parseInt(pai / 100);
+		var c = pai % 100;
+
+		if (c == 47 && wc != null && wc > 0) {
+			c = wc;
+		}
+
+		var begin = c - type;
+
+		var arr = [];
+		for (var i = 0; i < 3; i++) {
+			var k = begin + i;
+			if (k == wc) {
+				k = 47;
+			}
+
+			arr.push(k);
+		}
+
+		return arr;
+    },
+
+	initChis: function(seatView, index, mjid, wc) {
         var pgroot = null;
         var mgr = cc.vv.mahjongmgr;
-		var wc = cc.vv.gameNetMgr.wildcard;
 
         if (seatView._pengandgang.length <= index) {
             pgroot = cc.instantiate(this._pengTemp);
@@ -285,8 +308,12 @@ cc.Class({
 
 		pgroot.children[3].active = false;
 
-		var mjs = cc.vv.gameNetMgr.getChiArr(mjid);
+		console.log('initChis: ' + mjid);
+
+		var mjs = this.getChiArr(mjid, wc);
 		var side = 'south';
+
+		console.log(mjs);
 
         for (var i = 0; i < 3; i++) {
             var child = pgroot.children[i];

@@ -55,6 +55,8 @@ cc.Class({
             return;
         }
 
+		console.log('MJGame onLoad');
+
         this.addComponent("GameOver");
         this.addComponent("PengGangs");
         this.addComponent("MJRoom");
@@ -1734,8 +1736,6 @@ cc.Class({
         var holds = this.sortHolds(seatData);
 		var swap = 'east' == side;
 
-		console.log('after sort, side=' + side);
-
         if (holds != null && holds.length > 0) {
             var index = 0;
 			var _holds = holds.slice(0);
@@ -1780,8 +1780,6 @@ cc.Class({
 			if (hasMopai) {
 				mjnum += 1;
 			}
-
-			console.log('mjnum=' + mjnum);
 
 			for (var i = 0; i < mjnum; i++) {
 				var mjnode = this.getMJItem(sideHolds, localIndex, i);

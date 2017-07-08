@@ -50,6 +50,10 @@ cc.Class({
 		var wzmj = [ info.numzz, info.numgang, info.nummd, info.numdd, info.numyp, info.numsf ];
 		var vals = [ info.numzimo, info.numjiepao, info.numdianpao, info.numangang, info.numminggang ];
 
+		console.log('info');
+		console.log(info);
+		console.log(type);
+
 		if ('wzmj' == type) {
 			vals = wzmj;
 		}

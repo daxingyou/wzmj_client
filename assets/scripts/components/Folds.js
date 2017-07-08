@@ -13,10 +13,16 @@ cc.Class({
             return;
         }
 
+		console.log('folds onLoad');
+
         this.initView();
         this.initEventHandler();
         
         this.initAllFolds();
+    },
+
+	start: function() {
+		console.log('folds starting...');
     },
 
     initView: function() {
@@ -69,7 +75,7 @@ cc.Class({
     
     initEventHandler:function(){
         var self = this;
-        this.node.on('game_begin',function(data){
+        this.node.on('game_begin',function(data) {
             self.initAllFolds();
         });  
         
