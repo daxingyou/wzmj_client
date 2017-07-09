@@ -13,8 +13,6 @@ cc.Class({
         sprHeadImg: cc.Node,
 
 		privateRoomWin: cc.Node,
-		//joinGameWin: cc.Node,
-		//createRoomWin: cc.Node,
     },
     
     initNetHandlers: function() {
@@ -73,6 +71,9 @@ cc.Class({
         this.initButtonHandler("Canvas/bottom_right/btn_help");
         this.initButtonHandler("Canvas/bottom_right/btn_zhanji");
 */
+
+		this.initButtonHandler('Canvas/btnFeedback');
+
         if (!cc.vv.userMgr.notice) {
             cc.vv.userMgr.notice = {
                 version:null,
@@ -207,7 +208,7 @@ cc.Class({
     
     initButtonHandler: function(btnPath) {
         var btn = cc.find(btnPath);
-        cc.vv.utils.addClickEvent(btn,this.node,"Hall","onBtnClicked");
+        cc.vv.utils.addClickEvent(btn, this.node, "Hall", "onBtnClicked");
     },
     
     initLabels:function(){
@@ -226,6 +227,7 @@ cc.Class({
         cc.vv.audioMgr.playButtonClicked();
 
 		var name = event.target.name;
+		var node = this.node;
 
         if (name == "btn_shezhi") {
 			cc.vv.utils.showDialog(this.settingsWin, 'body', true);
@@ -233,6 +235,10 @@ cc.Class({
 			cc.vv.utils.showFrame(this.helpWin, 'head', 'body', true);
         } else if (name == 'btn_buy') {
 			cc.vv.utils.showFrame(this.shopWin, 'head', 'body', true);
+        } else if (name == 'btnFeedback') {
+			var fb = node.getChildByName('feedback');
+
+			cc.vv.utils.showDialog(fb, 'body', true);
         }
     },
     
@@ -267,13 +273,13 @@ cc.Class({
 		cc.vv.utils.showDialog(this.createRoomWin, 'body', true);
     },
 
-    // called every frame, uncomment this function to activate update callback
     update: function (dt) {
         var x = this.lblNotice.node.x;
-        x -= dt*100;
-        if(x + this.lblNotice.node.width < -1000){
+        x -= dt * 100;
+        if (x + this.lblNotice.node.width < -1000) {
             x = 500;
         }
+
         this.lblNotice.node.x = x;
         
         if(cc.vv && cc.vv.userMgr.roomData != null){
@@ -282,3 +288,4 @@ cc.Class({
         }
     },
 });
+
