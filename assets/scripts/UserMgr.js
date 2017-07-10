@@ -229,6 +229,24 @@ cc.Class({
 		callback(ret);
     },
 
+	getTicketsInfo: function(callback) {
+		var self = this;
+
+		// TODO
+		var ret = { ticket: 2000, chip: 500 };
+
+		callback(ret);
+    },
+
+	getTaskStatus: function(callback) {
+		var self = this;
+
+		// TODO
+		var ret = { hasBindPhone: false };
+
+		callback(ret);
+    },
+
 	getBindInfo: function(callback) {
 		var self = this;
 

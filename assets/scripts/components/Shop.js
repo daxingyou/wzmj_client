@@ -77,7 +77,7 @@ cc.Class({
 
 		var info = event.target.goodsInfo;
 
-		
+		cc.vv.alert.show('即将开启，敬请期待');
     },
 
 	onBtnShopClicked: function(event) {
