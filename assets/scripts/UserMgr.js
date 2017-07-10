@@ -218,6 +218,17 @@ cc.Class({
         cc.vv.http.sendRequest("/get_game_goods", null, onGet, shopURL);
     },
 
+	getGameExchange: function(callback) {
+        var self = this;
+
+		// TODO
+		var ret = [];
+
+		ret.push({ title: '10元充值卡', price: 100, unit: '奖券', imgid: 0 });
+		ret.push({ title: '20元充值卡', price: 200, unit: '奖券', imgid: 1 });
+		callback(ret);
+    },
+
 	getBindInfo: function(callback) {
 		var self = this;
 

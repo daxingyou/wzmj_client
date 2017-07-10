@@ -73,6 +73,7 @@ cc.Class({
 */
 
 		this.initButtonHandler('Canvas/btnFeedback');
+		this.initButtonHandler('Canvas/btnInvest');
 
         if (!cc.vv.userMgr.notice) {
             cc.vv.userMgr.notice = {
@@ -239,6 +240,10 @@ cc.Class({
 			var fb = node.getChildByName('feedback');
 
 			cc.vv.utils.showDialog(fb, 'body', true);
+        } else if (name == 'btnInvest') {
+			var invest = node.getChildByName('invest');
+
+			cc.vv.utils.showDialog(invest, 'body', true);
         }
     },
     
