@@ -247,6 +247,21 @@ cc.Class({
 		callback(ret);
     },
 
+	getDailyStatus: function(callback) {
+		var self = this;
+
+		// TODO
+		var ret = {
+			dayActive: 15,
+			weekActive: 100,
+			tasks: [ { type: 0, content: 'wzmj zz5c', progress: '1/5', award: 20 } ],
+			dayGot: [ 0, 0, 0, 0, 0 ],
+			weekGot: [ 0, 0 ],
+		};
+
+		callback(ret);
+    },
+
 	getBindInfo: function(callback) {
 		var self = this;
 

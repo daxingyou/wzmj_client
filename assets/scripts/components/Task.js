@@ -66,9 +66,13 @@ cc.Class({
     },
 
 	onBtnDailyClicked: function(event) {
-		// TODO
 		cc.vv.audioMgr.playButtonClicked();
-		cc.vv.alert.show('即将开启，敬请期待');
+
+		var task = this.node.getChildByName('task');
+		var daily = this.node.getComponent('Daily');
+
+		cc.vv.utils.showDialog(task, 'body', false);
+		daily.showDaily();
     },
 
 	onBtnLoginClicked: function(event) {
