@@ -76,9 +76,13 @@ cc.Class({
     },
 
 	onBtnLoginClicked: function(event) {
-		// TODO
 		cc.vv.audioMgr.playButtonClicked();
-		cc.vv.alert.show('即将开启，敬请期待');
+
+		var task = this.node.getChildByName('task');
+		var loginAward = this.node.getChildByName('loginAward');
+
+		cc.vv.utils.showDialog(task, 'body', false);
+		cc.vv.utils.showDialog(loginAward, 'body', true);
     },
 });
 

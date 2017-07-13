@@ -262,6 +262,24 @@ cc.Class({
 		callback(ret);
     },
 
+	getRouletteInfo: function(rname, callback) {
+		var self = this;
+
+		// TODO
+		var ret = {};
+
+		callback(ret);
+    },
+
+	runRoulette: function(rname, callback) {
+		var self = this;
+
+		// TODO
+		var ret = { id: 3 };
+
+		callback(ret);
+    },
+
 	getBindInfo: function(callback) {
 		var self = this;
 
